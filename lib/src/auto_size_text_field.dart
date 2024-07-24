@@ -534,20 +534,19 @@ class _AutoSizeTextFieldState extends State<AutoSizeTextField> {
         style = style.copyWith(fontSize: AutoSizeTextField._defaultFontSize);
       }
 
-      var maxLines = widget.maxLines ?? defaultTextStyle.maxLines;
       _sanityCheck();
 
-      var result = _calculateFontSize(size, style, maxLines);
+      var result = _calculateFontSize(size, style, 1);
       var fontSize = result[0] as double;
       var textFits = result[1] as bool;
-
       Widget textField;
-      textField = _buildTextField(fontSize, style, maxLines);
-      if (widget.overflowReplacement != null && !textFits) {
-        return widget.overflowReplacement!;
-      } else {
+      textField = _buildTextField(fontSize, style, 1);
+      if (textFits) {
         return textField;
       }
+
+      textField = _buildTextField(fontSize, style, null);
+      return textField;
     });
   }
 
@@ -591,7 +590,7 @@ class _AutoSizeTextFieldState extends State<AutoSizeTextField> {
         keyboardType: widget.keyboardType,
         maxLength: widget.maxLength,
         maxLengthEnforcement: widget.maxLengthEnforcement,
-        maxLines: widget.maxLines,
+        maxLines: maxLines,
         minLines: widget.minLines,
         obscureText: widget.obscureText,
         onChanged: widget.onChanged,
